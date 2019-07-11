@@ -10,12 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/gobuffalo/packr"
-)
-
-var (
-	ROOT    = "./"
-	PROJECT = "default"
-	HOST    = "0.0.0.0:3000"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type ResourceItem struct {
@@ -30,16 +25,20 @@ type ResourceList struct {
 	Items   []ResourceItem `json:"items"`
 }
 
+var (
+	ROOT    = kingpin.Flag("dir", "Root directory of code to be audited.").Default("./").Short('d').String()
+	HOST    = kingpin.Flag("host", "Host information.").Default("0.0.0.0:3000").Short('h').String()
+	PROJECT = kingpin.Flag("project", "Project slug name.").Default("default").Short('p').String()
+)
+
 func main() {
 
-	if len(os.Args) == 2 {
-		PROJECT = os.Args[1]
-	}
+	kingpin.Version("0.0.1")
+	kingpin.Parse()
 
-	if len(os.Args) > 2 {
-		PROJECT = os.Args[1]
-		ROOT = os.Args[2]
-	}
+	fmt.Println("Source code directory: " + *ROOT)
+	fmt.Println("Default host information: " + *HOST)
+	fmt.Println("Project name: " + *PROJECT)
 
 	box := packr.NewBox("./assets")
 
@@ -75,10 +74,10 @@ func main() {
 
 	http.HandleFunc("/filelist", func(w http.ResponseWriter, r *http.Request) {
 		resources := ResourceList{}
-		resources.Root = ROOT
-		resources.Project = PROJECT
+		resources.Root = *ROOT
+		resources.Project = *PROJECT
 
-		err := filepath.Walk(ROOT,
+		err := filepath.Walk(*ROOT,
 			func(path string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err
@@ -128,7 +127,7 @@ func main() {
 		w.Write(content)
 	})
 
-	fmt.Println("Listening on port http://" + HOST)
-	http.ListenAndServe(HOST, nil)
+	fmt.Println("\nListening on port http://" + *HOST)
+	http.ListenAndServe(*HOST, nil)
 
 }
