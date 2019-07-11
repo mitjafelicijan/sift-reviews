@@ -1,7 +1,5 @@
 package main
 
-// https://github.com/gobuffalo/packr
-
 import (
 	"encoding/json"
 	"fmt"

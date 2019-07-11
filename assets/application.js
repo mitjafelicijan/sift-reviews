@@ -1,5 +1,4 @@
 const main = document.querySelector('main');
-const storage = window.localStorage;
 
 let project = null;
 let root = null;
