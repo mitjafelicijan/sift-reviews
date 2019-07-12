@@ -5,4 +5,4 @@ dev:
 
 build:
 	GOOS=darwin GOARCH=amd64 packr build
-	mv audit-tool ~/Dropbox/bin
+	mv sift ~/Dropbox/bin

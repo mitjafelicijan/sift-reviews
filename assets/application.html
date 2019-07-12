@@ -6,9 +6,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Audit tool</title>
+    <title>Sift - Audit tool</title>
 
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
     <link rel="stylesheet" href="/assets/application.css">
 
   </head>
@@ -16,19 +15,27 @@
   <body>
 
     <header>
-      <h1>✍ Audit tool <small>1.0.0</small></h1>
-      <p>Project name: <span class="project"></span></p>
-      <p>Number of items: <span class="items">0</span></p>
-      <p>Number of comments: <span class="comments">0</span></p>
-      <p>
+      <div>
+        <h1>✍ Sift - Audit tool <small>1.0.0</small></h1>
+      </div>
+      <div>
+        <p>
+          Project: <span class="project"></span> »
+          Items: <span class="items">0</span> »
+          Comments: <span class="comments">0</span>
+        </p>
+        <span class="icons folder"></span>
+        <span class="icons file"></span>
+      </div>
+      <div>
         <button class="export-report">Export report</button>
         <button class="clear-comments">Clear comments</button>
-      </p>
+      </div>
     </header>
 
     <main></main>
 
-    <script src="/assets/application.js"></script>
+    <script src="/assets/application.js" async></script>
 
   </body>
 

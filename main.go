@@ -7,7 +7,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
+	"strings"
 
 	"github.com/gobuffalo/packr"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -28,21 +31,43 @@ type ResourceList struct {
 
 var (
 	VERSION = "1.0.0"
+	ASSETS  = "assets"
 	ROOT    = kingpin.Flag("dir", "Root directory of code to be audited.").Default("./").Short('d').String()
-	HOST    = kingpin.Flag("host", "Host information.").Default("0.0.0.0:3000").Short('h').String()
-	PROJECT = kingpin.Flag("project", "Project slug name.").Default("default").Short('p').String()
+	HOST    = kingpin.Flag("host", "Web server information.").Default("0.0.0.0:3000").Short('h').String()
+	PROJECT = kingpin.Flag("project", "Project slug name that must be unique.").Default("default").Short('p').String()
+	EXCLUDE = kingpin.Flag("exclude", "Exclude directories or files separated by comma.").Default(".git,node_modules").Short('e').String()
+	BROWSER = kingpin.Flag("browser", "Open browser after server starts.").Short('b').Bool()
 )
+
+func openbrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 func main() {
 
 	kingpin.Version(VERSION)
 	kingpin.Parse()
 
-	fmt.Println("Source code directory: " + *ROOT)
-	fmt.Println("Default host information: " + *HOST)
-	fmt.Println("Project name: " + *PROJECT)
+	fmt.Printf("Source code directory: %s\n", *ROOT)
+	fmt.Printf("Default host information: %s\n", *HOST)
+	fmt.Printf("Project name: %s\n", *PROJECT)
 
-	box := packr.NewBox("./assets")
+	box := packr.NewBox("./" + ASSETS)
+	http.Handle(fmt.Sprintf("/%s/", ASSETS), http.StripPrefix(fmt.Sprintf("/%s/", ASSETS), http.FileServer(box)))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		content, err := box.FindString("application.html")
@@ -51,26 +76,6 @@ func main() {
 		}
 
 		w.Header().Set("Content-Type", "text/html")
-		w.Write([]byte(content))
-	})
-
-	http.HandleFunc("/assets/application.js", func(w http.ResponseWriter, r *http.Request) {
-		content, err := box.FindString("application.js")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		w.Header().Set("Content-Type", "application/javascript")
-		w.Write([]byte(content))
-	})
-
-	http.HandleFunc("/assets/application.css", func(w http.ResponseWriter, r *http.Request) {
-		content, err := box.FindString("application.css")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		w.Header().Set("Content-Type", "text/css")
 		w.Write([]byte(content))
 	})
 
@@ -86,12 +91,12 @@ func main() {
 					return err
 				}
 
-				if info.IsDir() && info.Name() == ".git" {
-					return filepath.SkipDir
-				}
-
-				if info.IsDir() && info.Name() == "node_modules" {
-					return filepath.SkipDir
+				// ignore based on argv flag
+				excludedItems := strings.Split(*EXCLUDE, ",")
+				for _, item := range excludedItems {
+					if info.IsDir() && info.Name() == item {
+						return filepath.SkipDir
+					}
 				}
 
 				resources.Items = append(resources.Items, ResourceItem{
@@ -130,7 +135,10 @@ func main() {
 		w.Write(content)
 	})
 
-	fmt.Println("\nListening on port http://" + *HOST)
+	if *BROWSER {
+		openbrowser(fmt.Sprintf("http://%s", *HOST))
+	}
+
 	http.ListenAndServe(*HOST, nil)
 
 }
