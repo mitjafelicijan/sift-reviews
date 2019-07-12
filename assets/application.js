@@ -105,6 +105,8 @@ fetch('/filelist')
 
                   // add line
                   line = htmlEntities(line);
+                  line = line.split(/\s\s/).join('<u>▪▪</u>');
+                  line = line.split('▪').join('<i>•</i>');
                   line = line.split(' ').join('<i>•</i>');
                   line = line.split('\t').join('<i>➝</i>');
                   let paragraph = document.createElement('p');
@@ -121,7 +123,8 @@ fetch('/filelist')
                 code.querySelectorAll('p b').forEach((line) => {
                   line.addEventListener('click', (evt) => {
                     if (evt.target.classList.contains('comment')) {
-                      console.log('already has it');
+                      // console.log('already has it');
+                      // check if empty and then remove comment
                     } else {
                       evt.target.classList.add('comment');
 

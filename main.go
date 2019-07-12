@@ -22,10 +22,12 @@ type ResourceItem struct {
 type ResourceList struct {
 	Project string         `json:"project"`
 	Root    string         `json:"root"`
+	Version string         `json:"version"`
 	Items   []ResourceItem `json:"items"`
 }
 
 var (
+	VERSION = "1.0.0"
 	ROOT    = kingpin.Flag("dir", "Root directory of code to be audited.").Default("./").Short('d').String()
 	HOST    = kingpin.Flag("host", "Host information.").Default("0.0.0.0:3000").Short('h').String()
 	PROJECT = kingpin.Flag("project", "Project slug name.").Default("default").Short('p').String()
@@ -33,7 +35,7 @@ var (
 
 func main() {
 
-	kingpin.Version("0.0.1")
+	kingpin.Version(VERSION)
 	kingpin.Parse()
 
 	fmt.Println("Source code directory: " + *ROOT)
@@ -76,6 +78,7 @@ func main() {
 		resources := ResourceList{}
 		resources.Root = *ROOT
 		resources.Project = *PROJECT
+		resources.Version = VERSION
 
 		err := filepath.Walk(*ROOT,
 			func(path string, info os.FileInfo, err error) error {

@@ -18,6 +18,11 @@ header {
   margin-bottom: 30px;
 }
 
+header h1 small {
+  color: gray;
+  font-size: 45%;
+}
+
 header p {
   margin: 0;
 }
@@ -80,10 +85,16 @@ main > section > summary > p > b.comment {
   color: white;
 }
 
-main > section > summary > p > i {
-  display: inline-block;
+main > section > summary > p u {
   color: red;
+  border: 1px dashed #ff9f9f;
+  text-decoration: none;
+}
+
+main > section > summary > p i {
+  display: inline-block;
   font-style: normal;
+  color: red;
 }
 
 main > section > summary > textarea {
