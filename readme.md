@@ -14,11 +14,13 @@ There are pre-compiled versions for 64bit GNU/Linux and MacOS systems.
 
 ```bash
 # for GNU/Linux use
-wget -O sift.tar.gz https://github.com/mitjafelicijan/sift/releases/download/1.0/sift-linux-amd64
+wget -O sift https://github.com/mitjafelicijan/sift/releases/download/1.0/sift-linux-amd64
 
 # for MacOS use
-wget -O sift.tar.gz https://github.com/mitjafelicijan/sift/releases/download/1.0/sift-darwin-amd64
-tar xvzf sift.tar.gz
+wget -O sift https://github.com/mitjafelicijan/sift/releases/download/1.0/sift-darwin-amd64
+
+# adding executable bit
+chmod +x sift
 ```
 
 ### Compiling from source
