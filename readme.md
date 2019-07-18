@@ -13,7 +13,11 @@
 There are pre-compiled versions for 64bit GNU/Linux and MacOS systems.
 
 ```bash
-wget -O sift.tar.gz https://path-to-tarball
+# for GNU/Linux use
+wget -O sift.tar.gz https://github.com/mitjafelicijan/sift/releases/download/1.0/sift-linux-amd64
+
+# for MacOS use
+wget -O sift.tar.gz https://github.com/mitjafelicijan/sift/releases/download/1.0/sift-darwin-amd64
 tar xvzf sift.tar.gz
 ```
 
