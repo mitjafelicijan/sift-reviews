@@ -1,5 +1,8 @@
 # Sift - Tool for auditing code
 
+[» Watch usage video](https://www.youtube.com/watch?v=x4DRaCUx6RA)
+
+**Table of contents**
 1. [Installation](#Installation)
    1. [Using Binary version](#Using-Binary-version)
    2. [Compiling from source](#Compiling-from-source)
